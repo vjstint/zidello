@@ -1,0 +1,23 @@
+version: "3.2"
+services:
+    web:
+        image: ${NGINX_IMAGE_ID}
+        ports:
+            - "${NGINX_PUBLIC_HTTP_PORT}:80/tcp"
+            - "${NGINX_PUBLIC_HTTPS_PORT}:443/tcp"
+        expose:
+            - "${NGINX_PUBLIC_HTTP_PORT}/tcp"
+            - "${NGINX_PUBLIC_HTTPS_PORT}/tcp"
+        links:
+            - php-fpm:php
+        tty: true
+        volumes:
+            - ./app/:/app
+            - ./ssl/:/etc/nginx/ssl-certs/
+            - ./site.conf:/etc/nginx/conf.d/site.conf
+    php-fpm:
+        image: ${PHP_IMAGE_ID}
+        restart: always
+        tty: true
+        volumes:
+            - ./app:/app
